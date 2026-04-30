@@ -1,10 +1,23 @@
+import asyncio
+asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
 import pyshark
 import argparse
 import sys
 import os
 from datetime import datetime
 
+if sys.version_info >= (3,12):
+	#create a fake function to prevent pyshark crash
+	asyncio.get_child_watcher = lambda: asyncio.SafeChildWatcher()
+	asyncio.set_child_watcher = lambda watcher: None
+	class FakeWatcher:
+		def attach_loop(self, loop): pass
+	asyncio.SafeChildWatcher = FakeWatcher
+
 def start_capture():
+	loop = asyncio.new_event_loop() 
+	asyncio.set_event_loop(loop)
+
 	#Setup the parser
 	parser=argparse.ArgumentParser(description='Live Packet Capture Tool')
 	parser.add_argument('-i','--interface',required=True,help='The network interface to monitor')
