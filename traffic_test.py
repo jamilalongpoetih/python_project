@@ -60,6 +60,6 @@ def start_capture():
 		capture.close()
 		print(f"-- Done. {target_count} packets saved to {file_name} --")
 		os._exit(0)
-				
+#Run main	
 if __name__ == "__main__":
 	start_capture()
